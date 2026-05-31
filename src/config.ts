@@ -7,11 +7,11 @@ import * as v from 'valibot'
 import { name } from '../package.json'
 import { ParsedConfig } from './schemas'
 
-export const CONFIG_DIR_PATH = join(homedir(), `.${name}`)
+const CONFIG_DIR_PATH = join(homedir(), `.${name}`)
 
 export const CONFIG_PATH = join(CONFIG_DIR_PATH, 'config.json')
 
-const DEFAULT_CONFIG: ParsedConfig = { groups: [] } as const
+export const DEFAULT_CONFIG: ParsedConfig = { groups: [] } as const
 
 function readConfig() {
   try {
