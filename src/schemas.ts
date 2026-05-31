@@ -2,14 +2,16 @@ import * as v from 'valibot'
 import validatePackageName from 'validate-npm-package-name'
 import { parsePackageSpec } from './utils'
 
-export const PackageSpec = v.pipe(
-  v.string(),
-  v.trim(),
-  v.check(spec => {
-    const [name] = parsePackageSpec(spec)
-    return validatePackageName(name).validForNewPackages
-  })
-)
+export function PackageSpec(message?: string) {
+  return v.pipe(
+    v.string(),
+    v.trim(),
+    v.check(spec => {
+      const [name] = parsePackageSpec(spec)
+      return validatePackageName(name).validForNewPackages
+    }, message)
+  )
+}
 
 export const ParsedConfig = v.pipe(
   v.string(),
@@ -18,7 +20,7 @@ export const ParsedConfig = v.pipe(
     groups: v.array(
       v.object({
         name: v.pipe(v.string(), v.trim()),
-        packages: v.array(PackageSpec),
+        packages: v.array(PackageSpec()),
       })
     ),
   })
