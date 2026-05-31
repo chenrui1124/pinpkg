@@ -20,6 +20,7 @@
     "@valibot/to-json-schema": "^1.7.0",
     "citty": "^0.2.2",
     "es-toolkit": "^1.47.0",
+    "picocolors": "^1.1.1",
     "ts-pattern": "^5.9.0",
     "valibot": "^1.4.1",
     "validate-npm-package-name": "^7.0.2"
