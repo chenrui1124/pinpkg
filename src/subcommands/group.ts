@@ -78,7 +78,15 @@ export const groupCommand = defineCommand({
         alias: 'ls',
         description: 'List all package groups',
       },
-      run: () => {},
+      run: () => {
+        note(
+          config.groups
+            .map(group => [pc.cyan(group.name), group.packages.join(', ')].join('\n'))
+            .join('\n\n'),
+          `Groups (${config.groups.length})`,
+          { format: line => line }
+        )
+      },
     }),
 
     remove: defineCommand({
