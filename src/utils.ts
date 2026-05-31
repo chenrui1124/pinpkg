@@ -1,3 +1,5 @@
+import { cancel, isCancel } from '@clack/prompts'
+
 /**
  * @test ./test/utils.test.ts
  */
@@ -12,4 +14,12 @@ export function parsePackageSpec(
       : [nameAndVersion.slice(0, atIndex), nameAndVersion.slice(atIndex + 1)]
 
   return [name, version, flags] as const
+}
+
+export function useCancel<T>(prompt: T | symbol) {
+  if (isCancel(prompt)) {
+    cancel('Operation cancelled.')
+    process.exit(0)
+  }
+  return prompt
 }
