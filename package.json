@@ -1,0 +1,38 @@
+{
+  "name": "pinpack",
+  "version": "0.0.0",
+  "description": "A CLI tool to install packages from predefined stores in your project.",
+  "license": "MIT",
+  "type": "module",
+  "bin": "./dist/cli.mjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rolldown -c",
+    "dev": "pnpm build -w",
+    "prepublishOnly": "pnpm build",
+    "preview": "node ./dist/cli.mjs",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.5.0",
+    "@valibot/to-json-schema": "^1.7.0",
+    "citty": "^0.2.2",
+    "es-toolkit": "^1.47.0",
+    "ts-pattern": "^5.9.0",
+    "valibot": "^1.4.1",
+    "validate-npm-package-name": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/validate-npm-package-name": "^4.0.2",
+    "bumpp": "^11.1.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "prettier-plugin-packagejson": "^3.0.2",
+    "rolldown": "1.0.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
+  }
+}
