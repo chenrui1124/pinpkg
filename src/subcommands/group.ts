@@ -1,7 +1,8 @@
-import { confirm, log, note, text } from '@clack/prompts'
+import { confirm, log, multiselect, note, text } from '@clack/prompts'
 import { defineCommand } from 'citty'
 import * as pc from 'picocolors'
 import * as v from 'valibot'
+import { name } from '../../package.json'
 import { config } from '../config'
 import { PackageSpec } from '../schemas'
 import { useCancel } from '../utils'
@@ -79,6 +80,9 @@ export const groupCommand = defineCommand({
         description: 'List all package groups',
       },
       run: () => {
+        if (config.groups.length === 0) {
+          return log.info(`No package groups found. Use "${name} group add" to create one.`)
+        }
         note(
           config.groups
             .map(group => [pc.cyan(group.name), group.packages.join(', ')].join('\n'))
@@ -94,7 +98,29 @@ export const groupCommand = defineCommand({
         alias: 'rm',
         description: 'Remove one or more package groups',
       },
-      run: () => {},
+      run: async () => {
+        const toDelete = useCancel(
+          await multiselect({
+            message: 'Select items to remove:',
+            options: config.groups.map(group => ({
+              label: group.name,
+              value: group.name,
+              hint: group.packages.join(', '),
+            })),
+          })
+        )
+
+        const isConfirmed = useCancel(
+          await confirm({
+            message: `Are you sure you want to remove the selected group(s)? This action cannot be undone.\n${toDelete.join('\n')}`,
+          })
+        )
+        if (!isConfirmed) return
+
+        const toDeleteSet = new Set(toDelete)
+        config.groups = config.groups.filter(group => !toDeleteSet.has(group.name))
+        log.info(`Removed ${toDelete.length} group(s) completely.`)
+      },
     }),
   },
 })
