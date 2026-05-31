@@ -12,7 +12,7 @@
     "build": "rolldown -c",
     "dev": "pnpm build -w",
     "prepublishOnly": "pnpm build",
-    "preview": "node ./dist/cli.mjs",
+    "release": "pnpm build && bumpp --commit \"v%s\" --no-push",
     "test": "vitest"
   },
   "dependencies": {
