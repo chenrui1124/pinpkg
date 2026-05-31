@@ -1,5 +1,6 @@
 import { confirm, log, note, text } from '@clack/prompts'
 import { defineCommand } from 'citty'
+import * as pc from 'picocolors'
 import * as v from 'valibot'
 import { config } from '../config'
 import { PackageSpec } from '../schemas'
@@ -54,9 +55,9 @@ export const groupCommand = defineCommand({
           .map(spec => spec.trim().replace(/#(.*)/, (_, flags) => '#' + flags.replace(/[^D]/g, '')))
 
         note(
-          [`Group name: \x1b[36m${name}\x1b[39m`, `Packages: ${packages.join(', ')}`].join('\n'),
+          [`Group name: ${pc.cyan(name)}`, `Packages: ${pc.cyan(packages.join(', '))}`].join('\n'),
           'Summary',
-          { format: l => l }
+          { format: line => line }
         )
 
         const isConfirmed = useCancel(
@@ -67,7 +68,7 @@ export const groupCommand = defineCommand({
 
         if (isConfirmed) {
           config.groups = config.groups.concat([{ name, packages }])
-          log.success(`Package group \x1b[36m${name}\x1b[39m added successfully!`)
+          log.success(`Package group ${pc.cyan(name)} added successfully!`)
         }
       },
     }),
