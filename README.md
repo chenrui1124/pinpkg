@@ -9,7 +9,7 @@ When you frequently scaffold projects using the same set of packages (e.g. `reac
 ## Install
 
 ```bash
-npm i -g pinpkg
+npm i -g @cr1124/pinpkg
 ```
 
 ## Commands
