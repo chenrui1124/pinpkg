@@ -1,7 +1,7 @@
 {
   "name": "@cr1124/pinpkg",
   "displayName": "pinpkg",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A CLI tool to install packages from predefined stores in your project.",
   "license": "MIT",
   "type": "module",
