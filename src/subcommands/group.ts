@@ -185,6 +185,7 @@ const groupRemoveCommand = defineCommand({
 
 export const groupCommand = defineCommand({
   meta: {
+    name: 'group',
     description: 'Manage package groups',
   },
   subCommands: {

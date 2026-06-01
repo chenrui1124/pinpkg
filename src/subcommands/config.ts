@@ -40,6 +40,7 @@ const configEditCommand = defineCommand({
 
 export const configCommand = defineCommand({
   meta: {
+    name: 'config',
     description: 'View and edit the configuration file',
   },
   subCommands: {
