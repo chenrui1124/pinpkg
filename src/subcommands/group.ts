@@ -1,4 +1,4 @@
-import { confirm, log, multiselect, note, text } from '@clack/prompts'
+import { confirm, log, multiselect, note, select, text } from '@clack/prompts'
 import { defineCommand } from 'citty'
 import * as pc from 'picocolors'
 import * as v from 'valibot'
@@ -84,6 +84,56 @@ export const groupAddCommand = defineCommand({
   },
 })
 
+const groupEditCommand = defineCommand({
+  meta: {
+    description: 'Edit an existing package group',
+  },
+  run: async () => {
+    const next = useCancel(
+      await select({
+        maxItems: 20,
+        message: 'Select a package group to edit:',
+        options: config.groups.map(group => ({
+          value: group,
+          label: group.name,
+          hint: group.packages.join(', '),
+        })),
+      })
+    )
+
+    const specs = useCancel(
+      await text({
+        message: `Edit the package specifications for group ${pc.cyan(next.name)}. Append #D for devDependency, and separate by spaces:`,
+        initialValue: next.packages.join(' '),
+        validate: ValidPackageSpecs,
+      })
+    )
+
+    const packages = specs
+      .split(' ')
+      .map(cleanPackageSpec)
+      .filter(spec => spec !== '')
+
+    note(
+      [`Group name: ${pc.cyan(next.name)}`, `Packages: ${pc.cyan(packages.join(', '))}`].join('\n'),
+      'Summary',
+      { format: line => line }
+    )
+
+    const isConfirmed = useCancel(
+      await confirm({
+        message: 'Are you sure you want to update this package group with the new specifications?',
+      })
+    )
+    if (isConfirmed) {
+      config.groups = config.groups.map(prev =>
+        prev.name === next.name ? { name: prev.name, packages } : prev
+      )
+      log.success(`Package group ${pc.cyan(next.name)} edited successfully!`)
+    }
+  },
+})
+
 const groupListCommand = defineCommand({
   meta: {
     alias: 'ls',
@@ -139,6 +189,7 @@ export const groupCommand = defineCommand({
   },
   subCommands: {
     add: groupAddCommand,
+    edit: groupEditCommand,
     list: groupListCommand,
     remove: groupRemoveCommand,
   },
