@@ -1,10 +1,13 @@
 {
-  "name": "pinpack",
+  "name": "@cr1124/pinpkg",
+  "displayName": "pinpkg",
   "version": "0.0.0",
   "description": "A CLI tool to install packages from predefined stores in your project.",
   "license": "MIT",
   "type": "module",
-  "bin": "./dist/cli.mjs",
+  "bin": {
+    "pinpkg": "dist/cli.mjs"
+  },
   "files": [
     "dist"
   ],
@@ -12,6 +15,7 @@
     "build": "rolldown -c",
     "dev": "pnpm build -w",
     "prepublishOnly": "pnpm build",
+    "preview": "node ./dist/cli.mjs",
     "release": "pnpm build && bumpp --commit \"v%s\" --no-push",
     "test": "vitest"
   },
@@ -35,5 +39,8 @@
     "rolldown": "1.0.3",
     "typescript": "^6.0.3",
     "vitest": "^4.1.7"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -5,7 +5,7 @@ import * as v from 'valibot'
 import { CONFIG_PATH } from '../config'
 import { useCancel } from '../utils'
 
-export const configEditCommand = defineCommand({
+const configEditCommand = defineCommand({
   meta: {
     description: 'Edit the configuration file',
   },
@@ -35,5 +35,14 @@ export const configEditCommand = defineCommand({
     }
 
     // [TODO] Validate the config file after editing and show error if it's invalid
+  },
+})
+
+export const configCommand = defineCommand({
+  meta: {
+    description: 'View and edit the configuration file',
+  },
+  subCommands: {
+    edit: configEditCommand,
   },
 })

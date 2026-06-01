@@ -4,10 +4,10 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { match } from 'ts-pattern'
 import * as v from 'valibot'
-import { name } from '../package.json'
+import { displayName } from '../package.json'
 import { ParsedConfig } from './schemas'
 
-const CONFIG_DIR_PATH = join(homedir(), `.${name}`)
+const CONFIG_DIR_PATH = join(homedir(), `.${displayName}`)
 
 export const CONFIG_PATH = join(CONFIG_DIR_PATH, 'config.json')
 

@@ -1,35 +1,35 @@
-# pinpack
+# pinpkg
 
 A CLI tool to install packages from predefined stores in your project.
 
 ## Why
 
-When you frequently scaffold projects using the same set of packages (e.g. `react` + `react-dom` + `typescript` + `vite`), typing them out one by one gets old. **pinpack** lets you define reusable groups of packages and install them with a single command.
+When you frequently scaffold projects using the same set of packages (e.g. `react` + `react-dom` + `typescript` + `vite`), typing them out one by one gets old. **pinpkg** lets you define reusable groups of packages and install them with a single command.
 
 ## Install
 
 ```bash
-npm i -g pinpack
+npm i -g pinpkg
 ```
 
 ## Commands
 
-### `pinpack` / `pinpack use`
+### `pinpkg` / `pinpkg use`
 
 Select one or more package groups and install their packages into the current project.
 
 ```bash
-pinpack
+pinpkg
 ```
 
 You'll be prompted to choose groups and a package manager (npm, yarn, pnpm, or bun). The install command is then shown and can be edited before execution.
 
-### `pinpack group add`
+### `pinpkg group add`
 
 Create a new package group.
 
 ```bash
-pinpack group add
+pinpkg group add
 ```
 
 Package spec format:
@@ -46,25 +46,25 @@ name[@version][#D]
 
 Append `#D` to mark a package as a devDependency. Separate multiple specs with spaces.
 
-### `pinpack group list` (alias: `ls`)
+### `pinpkg group list` (alias: `ls`)
 
 List all package groups.
 
-### `pinpack group remove` (alias: `rm`)
+### `pinpkg group remove` (alias: `rm`)
 
 Remove one or more package groups.
 
-### `pinpack config edit`
+### `pinpkg config edit`
 
-Open the config file (`~/.pinpack/config.json`) in your preferred editor.
+Open the config file (`~/.pinpkg/config.json`) in your preferred editor.
 
-### `pinpack restore`
+### `pinpkg restore`
 
 Restore the config file to its initial state.
 
 ## Config
 
-Config is stored at `~/.pinpack/config.json`:
+Config is stored at `~/.pinpkg/config.json`:
 
 ```json
 {

@@ -2,7 +2,7 @@ import { confirm, log, multiselect, note, text } from '@clack/prompts'
 import { defineCommand } from 'citty'
 import * as pc from 'picocolors'
 import * as v from 'valibot'
-import { name } from '../../package.json'
+import { displayName } from '../../package.json'
 import { config } from '../config'
 import { PackageSpec } from '../schemas'
 import { useCancel } from '../utils'
@@ -72,14 +72,14 @@ export const groupAddCommand = defineCommand({
   },
 })
 
-export const groupListCommand = defineCommand({
+const groupListCommand = defineCommand({
   meta: {
     alias: 'ls',
     description: 'List all package groups',
   },
   run: () => {
     if (config.groups.length === 0) {
-      return log.info(`No package groups found. Use "${name} group add" to create one.`)
+      return log.info(`No package groups found. Use "${displayName} group add" to create one.`)
     }
     note(
       config.groups
@@ -91,7 +91,7 @@ export const groupListCommand = defineCommand({
   },
 })
 
-export const groupRemoveCommand = defineCommand({
+const groupRemoveCommand = defineCommand({
   meta: {
     alias: 'rm',
     description: 'Remove one or more package groups',
@@ -118,5 +118,16 @@ export const groupRemoveCommand = defineCommand({
     const toDeleteSet = new Set(toDelete)
     config.groups = config.groups.filter(group => !toDeleteSet.has(group.name))
     log.info(`Removed ${toDelete.length} group(s) completely.`)
+  },
+})
+
+export const groupCommand = defineCommand({
+  meta: {
+    description: 'Manage package groups',
+  },
+  subCommands: {
+    add: groupAddCommand,
+    list: groupListCommand,
+    remove: groupRemoveCommand,
   },
 })
