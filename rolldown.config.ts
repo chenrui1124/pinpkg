@@ -5,7 +5,7 @@ export default defineConfig({
   input: './src/cli.ts',
   output: {
     cleanDir: true,
-    dir: './dist',
+    dir: './bin',
     format: 'esm',
     entryFileNames: '[name].mjs',
     minify: true,

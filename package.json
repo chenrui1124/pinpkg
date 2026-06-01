@@ -6,10 +6,10 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "pinpkg": "dist/cli.mjs"
+    "pinpkg": "bin/cli.mjs"
   },
   "files": [
-    "dist"
+    "bin"
   ],
   "scripts": {
     "build": "rolldown -c",

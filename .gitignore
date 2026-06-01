@@ -3,6 +3,7 @@ node_modules
 .idea
 *.log
 
+bin
 dist
 .output
 .env
