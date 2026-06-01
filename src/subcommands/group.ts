@@ -4,8 +4,39 @@ import * as pc from 'picocolors'
 import * as v from 'valibot'
 import { displayName } from '../../package.json'
 import { config } from '../config'
-import { PackageSpec } from '../schemas'
-import { useCancel } from '../utils'
+import { cleanPackageSpec, isValidPackageSpec, useCancel } from '../utils'
+
+const ValidGroupName = v.pipe(
+  v.string(),
+  v.trim(),
+  v.nonEmpty('Group name cannot be empty.'),
+  v.check(
+    name => config.groups.every(group => group.name !== name),
+    'A group with this name already exists. Please choose a different name.'
+  )
+)
+
+const ValidPackageSpecs = v.pipe(
+  v.string(),
+  v.trim(),
+  v.nonEmpty('Package specifications cannot be empty.'),
+  v.transform(specs =>
+    specs
+      .split(' ')
+      .map(spec => spec.trim())
+      .filter(spec => spec !== '')
+  ),
+  v.array(
+    v.pipe(
+      v.string(),
+      v.check(
+        isValidPackageSpec,
+        ctx =>
+          `Invalid package specification ${ctx.input}. Please follow the format: name[@version][#D]`
+      )
+    )
+  )
+)
 
 export const groupAddCommand = defineCommand({
   meta: {
@@ -16,42 +47,24 @@ export const groupAddCommand = defineCommand({
       await text({
         initialValue: '',
         message: 'Enter the name of the package group to add:',
-        validate: v.pipe(
-          v.string(),
-          v.trim(),
-          v.nonEmpty('Group name cannot be empty.'),
-          v.check(
-            name => config.groups.every(group => group.name !== name),
-            'A group with this name already exists. Please choose a different name.'
-          )
-        ),
+        validate: ValidGroupName,
       })
     )
 
-    const packageSpecs = useCancel(
+    const specs = useCancel(
       await text({
         initialValue: '',
         message:
           'Enter the package specifications for the group. Append #D for devDependency, and separate by spaces:',
         placeholder: 'e.g. react @types/react@latest#D',
-        validate: v.pipe(
-          // TODO
-          v.string(),
-          v.trim(),
-          v.nonEmpty('Package specifications cannot be empty.'),
-          v.transform(specs => specs.split(' ').filter(spec => spec.trim() !== '')),
-          v.array(
-            PackageSpec(
-              'Invalid package specification format. Please follow the format: name[@version][#D]'
-            )
-          )
-        ),
+        validate: ValidPackageSpecs,
       })
     )
 
-    const packages = packageSpecs
+    const packages = specs
       .split(' ')
-      .map(spec => spec.trim().replace(/#(.*)/, (_, flags) => '#' + flags.replace(/[^D]/g, '')))
+      .map(cleanPackageSpec)
+      .filter(spec => spec !== '')
 
     note(
       [`Group name: ${pc.cyan(name)}`, `Packages: ${pc.cyan(packages.join(', '))}`].join('\n'),
@@ -64,7 +77,6 @@ export const groupAddCommand = defineCommand({
         message: 'Are you sure you want to add this package group?',
       })
     )
-
     if (isConfirmed) {
       config.groups = config.groups.concat([{ name, packages }])
       log.success(`Package group ${pc.cyan(name)} added successfully!`)

@@ -5,13 +5,27 @@ import { join } from 'node:path'
 import { match } from 'ts-pattern'
 import * as v from 'valibot'
 import { displayName } from '../package.json'
-import { ParsedConfig } from './schemas'
+import { isValidPackageSpec } from './utils'
 
 const CONFIG_DIR_PATH = join(homedir(), `.${displayName}`)
 
 export const CONFIG_PATH = join(CONFIG_DIR_PATH, 'config.json')
 
 export const DEFAULT_CONFIG: ParsedConfig = { groups: [] } as const
+
+const ParsedConfig = v.pipe(
+  v.string(),
+  v.parseJson(),
+  v.object({
+    groups: v.array(
+      v.object({
+        name: v.pipe(v.string(), v.trim()),
+        packages: v.array(v.pipe(v.string(), v.trim(), v.check(isValidPackageSpec))),
+      })
+    ),
+  })
+)
+type ParsedConfig = v.InferOutput<typeof ParsedConfig>
 
 function readConfig() {
   try {

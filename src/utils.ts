@@ -1,4 +1,6 @@
 import { cancel, isCancel } from '@clack/prompts'
+import { match } from 'ts-pattern'
+import validatePackageName from 'validate-npm-package-name'
 
 /**
  * @test ./test/utils.test.ts
@@ -14,6 +16,22 @@ export function parsePackageSpec(
       : [nameAndVersion.slice(0, atIndex), nameAndVersion.slice(atIndex + 1)]
 
   return [name, version, flags] as const
+}
+
+export function isValidPackageSpec(spec: string) {
+  const [name] = parsePackageSpec(spec)
+  return validatePackageName(name).validForNewPackages
+}
+
+export function cleanPackageSpec(spec: string) {
+  return spec
+    .trim()
+    .replace(/@+(?=#|$)/g, '')
+    .replace(/#(.*)/, (_, flags) =>
+      match(flags.replace(/[^D]/g, ''))
+        .with('', () => '')
+        .otherwise(cleaned => `#${cleaned}`)
+    )
 }
 
 export function useCancel<T>(prompt: T | symbol) {
