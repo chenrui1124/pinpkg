@@ -79,6 +79,7 @@ export const useCommand = defineCommand({
           'The following command will be executed to install the selected packages. You can edit it if needed.',
         initialValue: [
           deps.length > 0 ? `${packageManager} add ${deps.join(' ')}` : '',
+          '&&',
           devDeps.length > 0 ? `${packageManager} add -D ${devDeps.join(' ')}` : '',
         ].join(' '),
       })
