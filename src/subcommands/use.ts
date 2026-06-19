@@ -67,7 +67,11 @@ export const useCommand = defineCommand({
       ([a, b], spec) => {
         const [, , flags] = parsePackageSpec(spec)
         const name = spec.replace(/#.*$/, '')
-        flags.includes('D') ? b.push(name) : a.push(name)
+        if (flags.includes('D')) {
+          b.push(name)
+        } else {
+          a.push(name)
+        }
         return [a, b]
       },
       [[], []]
@@ -77,11 +81,19 @@ export const useCommand = defineCommand({
       await text({
         message:
           'The following command will be executed to install the selected packages. You can edit it if needed.',
-        initialValue: [
-          deps.length > 0 ? `${packageManager} add ${deps.join(' ')}` : '',
-          '&&',
-          devDeps.length > 0 ? `${packageManager} add -D ${devDeps.join(' ')}` : '',
-        ].join(' '),
+        initialValue: (() => {
+          let count = 0
+          const iv = []
+          if (deps.length > 0) {
+            count++
+            iv.push(`${packageManager} add ${deps.join(' ')}`)
+          }
+          if (devDeps.length > 0) {
+            count++
+            iv.push(`${packageManager} add -D ${devDeps.join(' ')}`)
+          }
+          return iv.join(count > 1 ? ' && ' : ' ')
+        })(),
       })
     )
 
